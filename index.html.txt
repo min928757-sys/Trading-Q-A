@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📈 TRADING QUIZ | @fxkaram</title>
+    <style>
+        /* ဒီမှာ မူလ CSS အတိုင်းထည့်ပါ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(145deg, #0b1422 0%, #1a2639 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 16px;
+            position: relative;
+        }
+
+        .quiz-container {
+            width: 100%;
+            max-width: 750px;
+            background: rgba(18, 28, 46, 0.85);
+            backdrop-filter: blur(12px);
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            border-radius: 48px;
+            padding: 30px 25px;
+            box-shadow: 0 30px 50px rgba(0, 0, 0, 0.7);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .header h1 {
+            font-size: 2.6rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #f5e56b, #f9c74f, #f9844a);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .header p {
+            color: #9cb8d9;
+            background: #0f1a2f80;
+            display: inline-block;
+            padding: 8px 28px;
+            border-radius: 40px;
+            border: 1px solid goldenrod;
+            margin-top: 8px;
+        }
+
+        .progress-row {
+            display: flex;
+            justify-content: space-between;
+            background: #0b1422cc;
+            border-radius: 60px;
+            padding: 12px 20px;
+            margin-bottom: 25px;
+            border: 1px solid #3e4e6b;
+            color: white;
+            font-weight: 600;
+        }
+
+        .question-number {
+            background: #f0b90b;
+            color: #0b0f17;
+            padding: 7px 18px;
+            border-radius: 40px;
+        }
+
+        .score {
+            background: #1e2c45;
+            padding: 7px 22px;
+            border-radius: 40px;
+            border: 1px solid #f3b43c;
+        }
+
+        .question-box {
+            background: #101b2bbb;
+            border-radius: 42px;
+            padding: 30px 25px;
+            margin-bottom: 30px;
+            border: 2px solid #f0b90b50;
+            box-shadow: 0 12px 0 #0b121e;
+        }
+
+        .question-text {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #f3e9c0;
+            text-align: center;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin: 25px 0 15px;
+        }
+
+        .option-btn {
+            background: linear-gradient(145deg, #1f2c3f, #0f1a28);
+            border: 2px solid #485b7c;
+            color: #cfdfee;
+            font-size: 1.3rem;
+            font-weight: 600;
+            padding: 20px 8px;
+            border-radius: 60px;
+            cursor: pointer;
+            box-shadow: 0 8px 0 #0b101a;
+            text-align: center;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            background: #2f3f5b;
+            border-color: #f3b43c;
+            transform: scale(0.98);
+        }
+
+        .option-btn.correct-guess {
+            background: #1f8f4b;
+            border-color: #b7ffa0;
+            box-shadow: 0 0 25px #23d15e;
+        }
+
+        .option-btn.wrong-guess {
+            background: #b13e3e;
+            border-color: #ffa4a4;
+            box-shadow: 0 0 25px #ff5757;
+        }
+
+        .option-btn:disabled {
+            opacity: 0.8;
+            cursor: not-allowed;
+        }
+
+        .next-btn-container {
+            display: flex;
+            justify-content: center;
+        }
+
+        #nextBtn {
+            background: linear-gradient(135deg, #e4b020, #b87c10);
+            border: none;
+            color: #0e141f;
+            font-size: 1.8rem;
+            font-weight: 800;
+            padding: 15px 50px;
+            border-radius: 60px;
+            cursor: pointer;
+            box-shadow: 0 10px 0 #6e4f0b;
+            border: 1px solid #fadb5e;
+            margin-top: 10px;
+        }
+
+        #nextBtn:active {
+            transform: translateY(6px);
+            box-shadow: 0 4px 0 #6e4f0b;
+        }
+
+        #nextBtn:disabled {
+            opacity: 0.3;
+            transform: translateY(5px);
+            pointer-events: none;
+        }
+
+        .feedback-msg {
+            min-height: 45px;
+            font-size: 1.5rem;
+            text-align: center;
+            padding: 10px;
+            color: #fadf9e;
+        }
+
+        .footer {
+            margin-top: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            background: #0e1623d0;
+            padding: 15px 28px;
+            border-radius: 100px;
+            border: 1px solid #c9a03d;
+        }
+
+        .telegram-logo {
+            width: 42px;
+            height: 42px;
+            filter: drop-shadow(0 0 8px #29a9e1);
+        }
+
+        .footer a {
+            color: #ffe9a7;
+            font-size: 2rem;
+            font-weight: 700;
+            text-decoration: none;
+            background: #202e44;
+            padding: 5px 30px;
+            border-radius: 60px;
+            border: 1px solid #f3b43c;
+        }
+
+        .footer a:hover {
+            background: #2b3d5a;
+            color: #ffd966;
+        }
+
+        /* Sound Hint */
+        .sound-hint {
+            background: #2a3a55;
+            color: #ffd966;
+            padding: 10px;
+            border-radius: 50px;
+            text-align: center;
+            margin-bottom: 15px;
+            font-weight: bold;
+            border: 2px dashed gold;
+            cursor: pointer;
+        }
+
+        @media (max-width: 550px) {
+            .options-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sound Effects -->
+    <audio id="correctSound" preload="auto">
+        <source src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg" type="audio/ogg">
+    </audio>
+    <audio id="wrongSound" preload="auto">
+        <source src="https://actions.google.com/sounds/v1/alarms/incorrect_buzzer.ogg" type="audio/ogg">
+    </audio>
+    <audio id="nextSound" preload="auto">
+        <source src="https://actions.google.com/sounds/v1/alarms/gentle_click.ogg" type="audio/ogg">
+    </audio>
+    <audio id="lowScoreSound" preload="auto">
+        <source src="https://actions.google.com/sounds/v1/crowd_cheer/crowd_sigh.ogg" type="audio/ogg">
+    </audio>
+    <audio id="highScoreSound" preload="auto">
+        <source src="https://actions.google.com/sounds/v1/crowd_cheer/crowd_cheer_02.ogg" type="audio/ogg">
+    </audio>
+
+    <div class="quiz-container">
+        <!-- Sound Enable Hint -->
+        <div class="sound-hint" id="soundHint">
+            🔈 Sound ဖွင့်ရန် ဒီနေရာကို နှိပ်ပါ
+        </div>
+
+        <div class="header">
+            <h1>⚡ FX KARAM ⚡</h1>
+            <p>💹 TRADING BRAIN TEST 💹</p>
+        </div>
+
+        <div class="progress-row">
+            <span class="question-number" id="questionCount">1 / 10</span>
+            <span class="score" id="scoreDisplay">🏆 0</span>
+        </div>
+
+        <div class="question-box">
+            <div class="question-text" id="questionText">မေးခွန်းတင်နေသည်...</div>
+        </div>
+
+        <div class="options-grid" id="optionsContainer"></div>
+
+        <div class="feedback-msg" id="feedbackMsg"></div>
+
+        <div class="next-btn-container">
+            <button id="nextBtn" disabled>➡️ ရှေ့ဆက်ရန်</button>
+        </div>
+
+        <div class="footer">
+            <svg class="telegram-logo" viewBox="0 0 24 24" fill="#29a9e1">
+                <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.161l-1.973 9.308c-.148.685-.56.85-1.134.53l-3.133-2.31-1.512 1.455c-.167.167-.308.308-.632.308l.225-3.174 5.78-5.22c.252-.224-.055-.352-.39-.128l-7.144 4.5-3.077-.957c-.668-.208-.68-.668.138-.99l11.985-4.622c.557-.206 1.043.124.861.91z"/>
+            </svg>
+            <a href="https://t.me/fxkaram" target="_blank">@fxkaram</a>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            // Sound Elements
+            const correctSound = document.getElementById('correctSound');
+            const wrongSound = document.getElementById('wrongSound');
+            const nextSound = document.getElementById('nextSound');
+            const lowScoreSound = document.getElementById('lowScoreSound');
+            const highScoreSound = document.getElementById('highScoreSound');
+            const soundHint = document.getElementById('soundHint');
+
+            // Sound enabled flag
+            let soundEnabled = false;
+
+            // Function to enable sound
+            function enableSound() {
+                soundEnabled = true;
+                soundHint.style.display = 'none'; // Hide hint
+                
+                // Play a test sound to unlock audio on browser
+                correctSound.play().then(() => {
+                    correctSound.pause();
+                    correctSound.currentTime = 0;
+                }).catch(e => console.log("Test sound failed"));
+            }
+
+            // Click on hint to enable sound
+            soundHint.addEventListener('click', enableSound);
+
+            // Also enable sound when user clicks anywhere (first time)
+            document.body.addEventListener('click', function enableOnFirstClick() {
+                if (!soundEnabled) {
+                    enableSound();
+                }
+            }, { once: true });
+
+            function playSound(audioEl) {
+                if (!soundEnabled) return; // No sound if not enabled
+                if (!audioEl) return;
+                audioEl.currentTime = 0;
+                audioEl.play().catch(e => console.log("Sound error:", e));
+            }
+
+            // Quiz Data
+            const questions = [
+                {
+                    question: "📊 Forex မှာ 'Pip' ဆိုတာ ဘာကိုပြောတာလဲ?",
+                    options: ["Percentage In Point", "Price Interest Point", "Pound In Pence", "Premium In Price"],
+                    correct: 0
+                },
+                {
+                    question: "BTC/USD ဇယားမှာ အနီရောင်ဖယောင်းတိုင်က ဘာကိုပြသလဲ?",
+                    options: ["စျေးတက်ခြင်း", "စျေးကျခြင်း", "ဈေးမပြောင်းခြင်း", "Doji"],
+                    correct: 1
+                },
+                {
+                    question: "Support ဆိုတာ ဘာကိုဆိုလိုသနည်း?",
+                    options: ["စျေးခုခံရာနေရာ", "စျေးချိုးဖောက်ရာနေရာ", "ဝယ်လက်များတဲ့နေရာ", "အားလုံးမှား"],
+                    correct: 0
+                },
+                {
+                    question: "RSI အတိုကောက်က ဘာလဲ?",
+                    options: ["Relative Strength Index", "Real Speed Indicator", "Risk Strong Input", "Rate Swap Index"],
+                    correct: 0
+                },
+                {
+                    question: "အောက်ပါအထဲက ဘယ်အရာက ရွှေဈေးကိုကိုယ်စားပြုတာလဲ?",
+                    options: ["XAG/USD", "XAU/USD", "XPT/USD", "XPD/USD"],
+                    correct: 1
+                },
+                {
+                    question: "Bull Market ဆိုတာ ဘာလဲ?",
+                    options: ["ဈေးတက်တဲ့ဈေးကွက်", "ဈေးကျတဲ့ဈေးကွက်", "ဘေးတိုက်သွားတဲ့ဈေးကွက်", "မတည်ငြိမ်တဲ့ဈေးကွက်"],
+                    correct: 0
+                },
+                {
+                    question: "Lot size (1 Standard Lot) က အခြေခံအားဖြင့် unit ဘယ်လောက်လဲ?",
+                    options: ["1,000", "10,000", "100,000", "1,000,000"],
+                    correct: 2
+                },
+                {
+                    question: "Moving Average ကို ဘာအတွက်အသုံးများလဲ?",
+                    options: ["Trend ကိုကြည့်ရန်", "Volume တိုင်းရန်", "အတက်အကျကန့်သတ်ရန်", "အချိန်ကုန်သက်သာရန်"],
+                    correct: 0
+                },
+                {
+                    question: "Stop Loss ထားခြင်းရဲ့ အဓိကရည်ရွယ်ချက်က ဘာလဲ?",
+                    options: ["အမြတ်သော့ဖို့", "ဆုံးရှုံးမှုကန့်သတ်ဖို့", "ဝင်ငွေတိုးဖို့", "အာမခံထားဖို့"],
+                    correct: 1
+                },
+                {
+                    question: "🇺🇸 FOMC ဆိုတာ ဘာနဲ့ဆိုင်လဲ?",
+                    options: ["ဗဟိုဘဏ်နှုန်းထား", "ကုန်သွယ်ရေးစာချုပ်", "ရွှေသိုက်", "အခွန်မူဝါဒ"],
+                    correct: 0
+                }
+            ];
+
+            let currentIndex = 0;
+            let score = 0;
+            let locked = false;
+            let quizCompleted = false;
+
+            const questionEl = document.getElementById('questionText');
+            const optionsEl = document.getElementById('optionsContainer');
+            const nextBtn = document.getElementById('nextBtn');
+            const feedbackMsg = document.getElementById('feedbackMsg');
+            const questionCountSpan = document.getElementById('questionCount');
+            const scoreDisplay = document.getElementById('scoreDisplay');
+
+            function renderQuestion() {
+                if (quizCompleted) return;
+                
+                const q = questions[currentIndex];
+                questionEl.innerText = q.question;
+                optionsEl.innerHTML = '';
+
+                q.options.forEach((opt, idx) => {
+                    const btn = document.createElement('button');
+                    btn.className = 'option-btn';
+                    btn.innerText = `${String.fromCharCode(65 + idx)}. ${opt}`;
+                    btn.dataset.index = idx;
+                    btn.addEventListener('click', () => handleOptionClick(idx, btn));
+                    optionsEl.appendChild(btn);
+                });
+
+                feedbackMsg.innerText = '';
+                nextBtn.disabled = true;
+                locked = false;
+
+                document.querySelectorAll('.option-btn').forEach(b => {
+                    b.classList.remove('correct-guess', 'wrong-guess');
+                    b.disabled = false;
+                });
+
+                questionCountSpan.innerText = `${currentIndex + 1} / ${questions.length}`;
+            }
+
+            function handleOptionClick(clickedIdx, btnElement) {
+                if (locked || quizCompleted) return;
+
+                const q = questions[currentIndex];
+                const isCorrect = (clickedIdx === q.correct);
+
+                locked = true;
+
+                if (isCorrect) {
+                    playSound(correctSound);
+                    score++;
+                    scoreDisplay.innerText = `🏆 ${score}`;
+                } else {
+                    playSound(wrongSound);
+                }
+
+                const allOptions = document.querySelectorAll('.option-btn');
+                allOptions.forEach((btn, idx) => {
+                    btn.disabled = true;
+                    if (idx === q.correct) {
+                        btn.classList.add('correct-guess');
+                    } else if (idx === clickedIdx && !isCorrect) {
+                        btn.classList.add('wrong-guess');
+                    }
+                });
+
+                if (isCorrect) {
+                    feedbackMsg.innerText = '✅ မှန်ပါတယ် !  (Correct)';
+                } else {
+                    const correctLetter = String.fromCharCode(65 + q.correct);
+                    feedbackMsg.innerText = `❌ မှားသွားပါတယ်။ အဖြေမှန် = ${correctLetter}`;
+                }
+
+                nextBtn.disabled = false;
+            }
+
+            function nextQuestion() {
+                if (quizCompleted) return;
+                
+                playSound(nextSound);
+
+                if (currentIndex < questions.length - 1) {
+                    currentIndex++;
+                    renderQuestion();
+                } else {
+                    quizCompleted = true;
+                    
+                    optionsEl.innerHTML = '';
+                    nextBtn.style.display = 'none';
+                    
+                    let finalMessage = '';
+                    
+                    if (score <= 3) {
+                        finalMessage = '😟 စိတ်မပူပါနဲ့။ Trading ဆိုတာ လေ့လာမှုများမှ ရလာတာပါ။ ထပ်ကြိုးစားကြည့်ပါ။';
+                        playSound(lowScoreSound);
+                    } else if (score <= 6) {
+                        finalMessage = '👍 အင်း... အဆင်ပြေပါတယ်။ နည်းနည်းလေးထပ်လေ့လာရင် ပိုကောင်းလာမယ်။';
+                        playSound(lowScoreSound);
+                    } else if (score <= 9) {
+                        finalMessage = '🎉 သိပ်ကောင်းပါတယ်။ Trading အခြေခံကောင်းကို သိထားပါပေါ့။';
+                        playSound(highScoreSound);
+                    } else {
+                        finalMessage = '🏆 အကောင်းဆုံးပဲ။ သင်ဟာ Trading ပါရမီရှင်တစ်ယောက်ပါ။';
+                        playSound(highScoreSound);
+                    }
+                    
+                    questionEl.innerHTML = `
+                        <div style="text-align: center; font-size: 2rem; padding: 20px;">
+                            ✨ မေးခွန်း ၁၀ ခုလုံးပြီးဆုံးပါပြီ ✨<br><br>
+                            <span style="font-size: 3rem; color: gold;">${score} / 10</span><br><br>
+                            ${finalMessage}
+                        </div>
+                    `;
+                    
+                    feedbackMsg.innerHTML = '@fxkaram မှာ သင်ခန်းစာများဆက်လေ့လာပါ။ 📚';
+                }
+            }
+
+            nextBtn.addEventListener('click', nextQuestion);
+            renderQuestion();
+        })();
+    </script>
+</body>
+</html>
